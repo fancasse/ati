@@ -25,7 +25,7 @@
   }
 
       "boltImages": {
-    "dry": "https://github.com/fancasse/ati/blob/60e901fa871701a0dd5a47efbfb401f85b3ed931/photo/12.png?raw=true", 
-    "12": "https://github.com/fancasse/ati/blob/60e901fa871701a0dd5a47efbfb401f85b3ed931/photo/12.png?raw=true"
-  }
+    "dry": "https://github.com/fancasse/ati/raw/main/photo/12.png",
+    "12": "https://github.com/fancasse/ati/raw/main/photo/12.png"
+   }
 }
