@@ -1,5 +1,30 @@
-{ "latestVersionCode": 3, 
-  "latestVersionName": "v1.0.10", 
-  "apkUrl": "https://github.com/fancasse/ati/raw/refs/heads/main/ati.apk", 
-  "splashImageUrl": "http://benchaida.unblog.fr/files/2011/05/spe.gif"
+
+{
+  "latestVersionCode": 3,
+  "latestVersionName": "v1.0.0",
+  "apkUrl": "https://github.com/fancasse/ati/raw/main/ati.apk",
+  "splashImageUrl": "https://github.com/fancasse/ati/blob/main/logo-sonelgaz-1.png?raw=true",
+
+    "boltImages": {
+
+    "12": "https://github.com/fancasse/ati/blob/60e901fa871701a0dd5a47efbfb401f85b3ed931/photo/12.png?raw=true"
+  }
+  
+  "torqueData": {
+    "8.8": {
+      "dry": {
+        "4": "3.0 - 4.0",
+        "12": "70 - 110",
+        "30": "1700 - 2400"
+      },
+      "lubricated": {
+        "12": "50 - 80"
+      }
+    },
+    "10.9": {
+      "dry": {
+        "12": "95 - 140"
+      }
+    }
+  }
 }
