@@ -1,0 +1,16 @@
+{
+  "site": { "title": "...", "subtitle": "..." },
+  "lessons": [
+    {
+      "id": 1,
+      "icon": "📘",
+      "title": "الدرس الأول: ...",
+      "sections": [
+        { "type": "intro", "text": "...", "image": "..." },
+        { "type": "content", "title": "...", "text": "...", "image": "...", "tip": "..." },
+        { "type": "content", "title": "...", "text": "...", "list": ["...", "..."] },
+        { "type": "summary", "title": "...", "text": "...", "list": ["..."], "tip": "..." }
+      ]
+    }
+  ]
+}
