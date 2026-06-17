@@ -6,7 +6,7 @@
 <title>Alternator</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; color: #1a1a1a; line-height: 1.8; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; color: #1a73e8; line-height: 1.8; text-align: left; }
 .container { max-width: 800px; margin: 0 auto; padding: 16px; }
 
 .header { background: #1a73e8; color: #fff; padding: 24px 16px; text-align: center; border-radius: 12px; margin-bottom: 16px; }
@@ -17,14 +17,17 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; color: 
 .tab { flex-shrink: 0; background: #fff; border: 2px solid #e0e0e0; border-radius: 24px; padding: 8px 16px; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
 .tab.active { background: #1a73e8; color: #fff; border-color: #1a73e8; }
 
-.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); animation: fadeIn 0.4s ease; }
+.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); animation: fadeIn 0.4s ease; text-align: left; }
 .card h2 { color: #1a73e8; font-size: 1.2rem; margin-bottom: 12px; border-bottom: 2px solid #e8f0fe; padding-bottom: 8px; }
 .card img { width: 100%; height: auto; border-radius: 10px; margin: 12px 0; display: block; }
 .card p { margin-bottom: 12px; font-size: 1rem; }
-.card ul { padding-right: 20px; margin-bottom: 12px; }
-.card li { margin-bottom: 6px; }
 
-.tip { background: #e8f0fe; border-right: 4px solid #1a73e8; padding: 12px; border-radius: 8px; margin: 12px 0; }
+/* تم تعديل القوائم لتصبح المحاذاة والمسافة جهة اليسار */
+.card ul { padding-left: 20px; margin-bottom: 12px; list-style-position: inside; }
+.card li { margin-bottom: 6px; text-align: left; }
+
+/* تم تعديل الحافة الملونة لتصبح جهة اليسار */
+.tip { background: #e8f0fe; border-left: 4px solid #1a73e8; padding: 12px; border-radius: 8px; margin: 12px 0; text-align: left; }
 .tip strong { color: #1a73e8; }
 
 .error { background: #fce8e6; color: #c5221f; padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 16px; }
@@ -45,37 +48,33 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; color: 
 
 <div class="container">
   <div class="header">
-    <h1 id="siteTitle">دروس وواجبات</h1>
-    <p id="siteSubtitle">تعلم ببساطة</p>
+    <h1 id="siteTitle">Lessons & Assignments</h1>
+    <p id="siteSubtitle">Learn Simply</p>
   </div>
 
   <div class="tabs" id="tabs"></div>
   <div id="content"></div>
 
   <div class="footer">
-    <p>© 2026 دروس وواجبات</p>
+    <p>© 2026 Lessons & Assignments</p>
   </div>
 </div>
 
 <script>
-// ==========================================
-// استبدل هذا الرابط برابط GitHub Raw الخاص بك
-// ==========================================
 const JSON_URL = 'https://raw.githubusercontent.com/fancasse/ati/refs/heads/main/alternator/palier/lessons.json';
-// مثال: https://raw.githubusercontent.com/ahmed/dross/main/lessons.json
 
 (async function() {
   let data;
   try {
     data = await fetch(JSON_URL).then(r => {
-      if (!r.ok) throw new Error('فشل في جلب البيانات');
+      if (!r.ok) throw new Error('Failed to fetch data');
       return r.json();
     });
   } catch (e) {
     document.getElementById('content').innerHTML = `
       <div class="error">
-        ⚠️ لم يتم جلب ملف JSON من GitHub.<br>
-        تأكد من وضع الرابط الصحيح في متغير JSON_URL في الكود.<br>
+        ⚠️ Failed to fetch JSON file from GitHub.<br>
+        Make sure the correct link is set in the JSON_URL variable.<br>
         <small style="opacity:0.7">${e.message}</small>
       </div>`;
     return;
@@ -110,7 +109,7 @@ const JSON_URL = 'https://raw.githubusercontent.com/fancasse/ati/refs/heads/main
           html += '<ul>' + sec.list.map(i => `<li>${i}</li>`).join('') + '</ul>';
         }
         if (sec.tip) {
-          html += `<div class="tip"><strong>💡 نصيحة:</strong> ${sec.tip}</div>`;
+          html += `<div class="tip"><strong>💡 Tip:</strong> ${sec.tip}</div>`;
         }
       }
 
