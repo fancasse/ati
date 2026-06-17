@@ -6,10 +6,10 @@
                       "icon": "📘",
                             "title": "Démontage Et Remontage Partie superieur",
                                   "sections": [
-                                          { "type": "intro", "text": "Inspection extérieure et identification des capteurs", "image": "Retrait des capteurs de vibrations et du capteur de Mass Rotor" },
-                                           { "type": "content", "title": "Mesur", "text": "mesur jeu GardOil extérieur et intérieur", "image": "...", "tip": "Haut bas droite et gauche" },
-                                                          { "type": "content", "title": "Démontage gard-oil supérieur-extérieure ", "text": "b", "list": ["Clé mixte 19mm", "Clé mal 10- cliqué", "Tour-Novice", "marteau et maye"] },
-                                                                  { "type": "summary", "title": "Démontage chapeau palier", "text": "c", "list": ["Clé 85mm", "Clé 36mm", "Clé mixte 24mm"], "tip": "Inspection de l'intérieur avant levage" }
+                                          { "type": "intro", "text": "Inspection extérieure et identification des capteurs", "image": "", "title": "Retrait des capteurs de vibrations et du capteur de Mass Rotor" },
+                                           { "type": "content", "title": "Mesur", "text": "mesur jeu GardOil extérieur et intérieur", "image": "", "tip": "Haut bas droite et gauche" },
+                                                          { "type": "content", "title": "Démontage gard-oil supérieur-extérieure ", "text": "", "list": ["Clé mixte 19mm", "Clé mal 10- cliqué", "Tour-Novice", "marteau et maye"] },
+                                                                  { "type": "summary", "title": "Démontage chapeau palier", "text": "", "list": ["Clé 85mm", "Clé 36mm", "Clé mixte 24mm"], "tip": "Inspection de l'intérieur avant levage" }
                                                                         ]
                                                                             }
                                                                               ]
