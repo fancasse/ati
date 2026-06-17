@@ -4,12 +4,12 @@
     {
       "id": 1,
       "icon": "📘",
-      "title": "Vérifiez l'extérieur pour les capteurs connectés: ...",
+      "title": "Démontage Et Remontage Partie superieur",
       "sections": [
-        { "type": "intro", "text": "1", "image": "..." },
-        { "type": "content", "title": "2", "text": "a", "image": "...", "tip": "..." },
-        { "type": "content", "title": "3", "text": "b", "list": ["..", "..."] },
-        { "type": "summary", "title": "4", "text": "c", "list": [".."], "tip": "..." }
+        { "type": "intro", "text": "Inspection extérieure et identification des capteurs", "image": "Retrait des capteurs de vibrations et du capteur de Mass Rotor" },
+        { "type": "content", "title": "Mesur", "text": "-mesur jeu gard-oil	extérieur et intérieur", "image": "...", "tip": "Haut, bas, droite et gauche" },
+        { "type": "content", "title": "Démontage gard-oil supérieur-extérieure ", "text": "b", "list": ["Clé mixte 19mm", "Clé mal 10- cliqué", "Tour-Novice", "marteau et maye"] },
+        { "type": "summary", "title": "Démontage chapeau palier", "text": "c", "list": ["Clé 85mm", "Clé 36mm", "Clé mixte 24mm"], "tip": "Inspection de l'intérieur avant levage" }
       ]
     }
   ]
