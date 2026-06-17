@@ -1,15 +1,15 @@
 {
-  "site": { "title": "...", "subtitle": "..." },
+  "site": { "title": "Démontage Et Remontage Palier", "subtitle": "La méthode est similaire pour tous les générateurs." },
   "lessons": [
     {
       "id": 1,
       "icon": "📘",
-      "title": "الدرس الأول: ...",
+      "title": "Vérifiez l'extérieur pour les capteurs connectés: ...",
       "sections": [
-        { "type": "intro", "text": "...", "image": "..." },
-        { "type": "content", "title": "...", "text": "...", "image": "...", "tip": "..." },
-        { "type": "content", "title": "...", "text": "...", "list": ["...", "..."] },
-        { "type": "summary", "title": "...", "text": "...", "list": ["..."], "tip": "..." }
+        { "type": "intro", "text": "1", "image": "..." },
+        { "type": "content", "title": "2", "text": "a", "image": "...", "tip": "..." },
+        { "type": "content", "title": "3", "text": "b", "list": ["..", "..."] },
+        { "type": "summary", "title": "4", "text": "c", "list": [".."], "tip": "..." }
       ]
     }
   ]
