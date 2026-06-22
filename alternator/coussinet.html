@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محول JSON الذكي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .topic-title {
+            font-size: 1.3em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .btn-delete-topic {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+
+        .btn-delete-topic:hover {
+            background: #ff3838;
+            transform: scale(1.05);
+        }
+
+        .element-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .element-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .element-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .element-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .elements-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .element-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            border-right: 4px solid #667eea;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .element-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .element-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .element-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea.element-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-remove-element {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-top: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-remove-element:hover {
+            background: #ff4757;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .task-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .btn-add-task {
+            background: #2ed573;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-add-task:hover {
+            background: #26d063;
+        }
+
+        .btn-delete-task {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn-add-topic {
+            background: #2ed573;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-add-topic:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 213, 115, 0.5);
+        }
+
+        .btn-export {
+            background: #ffa502;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 165, 2, 0.4);
+        }
+
+        .btn-export:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 165, 2, 0.5);
+        }
+
+        .json-output {
+            background: #2d3436;
+            color: #00ff88;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin-top: 20px;
+            display: none;
+            direction: ltr;
+            text-align: left;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .json-output.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            font-size: 1.1em;
+        }
+
+        .icon::before {
+            margin-left: 5px;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .image-url-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 محول JSON الذكي</h1>
+        
+        <div id="topicsContainer"></div>
+        
+        <div class="controls">
+            <button class="btn-add-topic" onclick="addTopic()">
+                ➕ إضافة موضوع جديد
+            </button>
+            <button class="btn-export" onclick="exportJSON()">
+                📥 تصدير JSON
+            </button>
+        </div>
+        
+        <div id="jsonOutput" class="json-output"></div>
+    </div>
+
+    <script>
+        let topics = [];
+        let topicCounter = 0;
+
+        // إضافة موضوع جديد
+        function addTopic() {
+            topicCounter++;
+            const topic = {
+                id: topicCounter,
+                elements: []
+            };
+            topics.push(topic);
+            renderTopics();
+        }
+
+        // إضافة عنصر للموضوع
+        function addElement(topicId, type) {
+            const topic = topics.find(t => t.id === topicId);
+            if (!topic) return;
+            
+            const element = {
+                id: Date.now() + Math.random(),
+                type: type,
+                content: type === 'tasks' ? [] : ''
+            };
+            
+            if (type === 'tasks') {
+                element.content = [{ id: Date.now(), text: '', completed: false }];
+            }
+            
+            topic.elements.push(element);
+            renderTopics();
+        }
+
+        // تحديث محتوى العنصر
+        function updateElement(topicId, elementId, value) {
+            const topic = topics.find(t => t.id === topicId);
+            if (!topic) return;
+            const element = topic.elements.find(e => e.id === elementId);
+            if (element) {
+                element.content = value;
+            }
+        }
+
+        // تحديث مهمة
+        function updateTask(topicId, elementId, taskId, field, value) {
+            const topic = topics.find(t => t.id === topicId);
+            if (!topic) return;
+            const element = topic.elements.find(e => e.id === elementId);
+            if (element && element.type === 'tasks') {
+                const task = element.content.find(t => t.id === taskId);
+                if (task) {
+                    task[field] = field === 'completed' ? value : value;
+                }
+            }
+        }
+
+        // إضافة مهمة جديدة
+        function addTask(topicId, elementId) {
+            const topic = topics.find(t => t.id === topicId);
+            if (!topic) return;
+            const element = topic.elements.find(e => e.id === elementId);
+            if (element && element.type === 'tasks') {
+                element.content.push({
+                    id: Date.now(),
+                    text: '',
+                    completed: false
+                });
+                renderTopics();
+            }
+        }
+
+        // حذف مهمة
+        function removeTask(topicId, elementId, taskId) {
+            const topic = topics.find(t => t.id === topicId);
+            if (!topic) return;
+            const element = topic.elements.find(e => e.id === elementId);
+            if (element && element.type === 'tasks') {
+                element.content = element.content.filter(t => t.id !== taskId);
+                renderTopics();
+            }
+        }
+
+        // حذف عنصر
+        function removeElement(topicId, elementId) {
+            const topic = topics.find(t => t.id === topicId);
+            if (!topic) return;
+            topic.elements = topic.elements.filter(e => e.id !== elementId);
+            renderTopics();
+        }
+
+        // حذف موضوع
+        function removeTopic(topicId) {
+            topics = topics.filter(t => t.id !== topicId);
+            renderTopics();
+        }
+
+        // عرض الصورة
+        function previewImage(input, topicId, elementId) {
+            const url = input.value;
+            const preview = document.getElementById(`preview-${topicId}-${elementId}`);
+            if (url) {
+                preview.src = url;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+            updateElement(topicId, elementId, url);
+        }
+
+        // تصدير JSON
+        function exportJSON() {
+            const output = document.getElementById('jsonOutput');
+            const cleanTopics = topics.map(topic => {
+                const cleanElements = topic.elements.map(el => {
+                    if (el.type === 'tasks') {
+                        return {
+                            type: el.type,
+                            tasks: el.content
+                        };
+                    }
+                    return {
+                        type: el.type,
+                        content: el.content
+                    };
+                });
+                return {
+                    topic_id: topic.id,
+                    elements: cleanElements
+                };
+            });
+            
+            const jsonString = JSON.stringify(cleanTopics, null, 2);
+            output.textContent = jsonString;
+            output.classList.add('show');
+            
+            // نسخ تلقائي
+            navigator.clipboard.writeText(jsonString).then(() => {
+                // يمكن إضافة إشعار هنا
+            });
+        }
+
+        // عرض المواضيع
+        function renderTopics() {
+            const container = document.getElementById('topicsContainer');
+            
+            if (topics.length === 0) {
+                container.innerHTML = `
+                    <div class="topic-card">
+                        <div class="empty-state">
+                            لا يوجد مواضيع بعد. اضغط على "إضافة موضوع جديد" للبدء!
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = topics.map(topic => `
+                <div class="topic-card">
+                    <div class="topic-header">
+                        <span class="topic-title">📂 الموضوع #${topic.id}</span>
+                        <button class="btn-delete-topic" onclick="removeTopic(${topic.id})">
+                            🗑️ حذف الموضوع
+                        </button>
+                    </div>
+                    
+                    <div class="element-types">
+                        <button class="element-btn" onclick="addElement(${topic.id}, 'title')">
+                            🏷️ عنوان
+                        </button>
+                        <button class="element-btn" onclick="addElement(${topic.id}, 'description')">
+                            📄 شرح
+                        </button>
+                        <button class="element-btn" onclick="addElement(${topic.id}, 'text')">
+                            ✏️ نص
+                        </button>
+                        <button class="element-btn" onclick="addElement(${topic.id}, 'image')">
+                            🖼️ صورة
+                        </button>
+                        <button class="element-btn" onclick="addElement(${topic.id}, 'tasks')">
+                            ✅ قائمة مهام
+                        </button>
+                    </div>
+                    
+                    <div class="elements-container">
+                        ${topic.elements.map(element => renderElement(topic.id, element)).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // عرض عنصر
+        function renderElement(topicId, element) {
+            const icons = {
+                title: '🏷️',
+                description: '📄',
+                text: '✏️',
+                image: '🖼️',
+                tasks: '✅'
+            };
+            
+            const labels = {
+                title: 'العنوان',
+                description: 'الشرح',
+                text: 'النص',
+                image: 'رابط الصورة',
+                tasks: 'قائمة المهام'
+            };
+            
+            let inputHtml = '';
+            
+            switch(element.type) {
+                case 'title':
+                    inputHtml = `<input type="text" class="element-input" placeholder="اكتب العنوان هنا..." 
+                        value="${element.content}" onchange="updateElement(${topicId}, ${element.id}, this.value)">`;
+                    break;
+                    
+                case 'description':
+                    inputHtml = `<textarea class="element-input" placeholder="اكتب الشرح هنا..." 
+                        onchange="updateElement(${topicId}, ${element.id}, this.value)">${element.content}</textarea>`;
+                    break;
+                    
+                case 'text':
+                    inputHtml = `<textarea class="element-input" placeholder="اكتب النص هنا..." 
+                        onchange="updateElement(${topicId}, ${element.id}, this.value)">${element.content}</textarea>`;
+                    break;
+                    
+                case 'image':
+                    inputHtml = `
+                        <input type="text" class="image-url-input" placeholder="أدخل رابط الصورة..." 
+                            value="${element.content}" onchange="previewImage(this, ${topicId}, ${element.id})">
+                        <img id="preview-${topicId}-${element.id}" class="preview-image" 
+                            src="${element.content}" style="display: ${element.content ? 'block' : 'none'}" 
+                            onerror="this.style.display='none'">
+                    `;
+                    break;
+                    
+                case 'tasks':
+                    inputHtml = `
+                        <div class="task-list">
+                            ${element.content.map(task => `
+                                <div class="task-item">
+                                    <input type="checkbox" class="task-checkbox" 
+                                        ${task.completed ? 'checked' : ''} 
+                                        onchange="updateTask(${topicId}, ${element.id}, ${task.id}, 'completed', this.checked)">
+                                    <input type="text" class="task-input" placeholder="المهمة..." 
+                                        value="${task.text}" 
+                                        onchange="updateTask(${topicId}, ${element.id}, ${task.id}, 'text', this.value)">
+                                    <button class="btn-delete-task" onclick="removeTask(${topicId}, ${element.id}, ${task.id})">
+                                        ❌
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="btn-add-task" onclick="addTask(${topicId}, ${element.id})">
+                            ➕ إضافة مهمة
+                        </button>
+                    `;
+                    break;
+            }
+            
+            return `
+                <div class="element-item">
+                    <div class="element-label">
+                        ${icons[element.type]} ${labels[element.type]}
+                        <button class="btn-remove-element" onclick="removeElement(${topicId}, ${element.id})">
+                            حذف العنصر
+                        </button>
+                    </div>
+                    ${inputHtml}
+                </div>
+            `;
+        }
+
+        // تهيئة
+        renderTopics();
+    </script>
+</body>
+</html>
