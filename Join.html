@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة أبعاد الجوانات الاحترافية</title>
+    <title>حاسبة الجوانات الديناميكية</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -131,9 +131,10 @@
             border-radius: 12px;
             padding: 20px;
             border: 1px dashed var(--border);
+            min-height: 300px;
         }
 
-        .gasket-svg {
+        #gasket-svg {
             width: 100%;
             max-width: 260px;
             height: auto;
@@ -176,19 +177,14 @@
             padding: 2px 8px;
             border-radius: 4px;
         }
-
-        .highlight {
-            color: var(--accent);
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>حاسبة ورش الخراطة وتصنيع الجوانات</h1>
-        <p>احسب أبعاد الفتح الدقيق للمدور (الفرجار) لثقب مسامير الجوان يدوياً بدون خطأ</p>
+        <h1>حاسبة وتصنيع الجوانات الديناميكية</h1>
+        <p>الأبعاد و المحاكاة المرئية لأماكن المسامير</p>
     </header>
 
     <div class="main-content">
@@ -196,47 +192,35 @@
         <div class="input-section">
             <div class="input-group">
                 <label>القطر الخارجي للجوان (مم):</label>
-                <input type="number" id="dOut" placeholder="مثال: 200" step="any" required>
+                <input type="number" id="dOut" placeholder="مثال: 200" step="any" value="200" required>
             </div>
             <div class="input-group">
                 <label>القطر الداخلي للجوان (مم):</label>
-                <input type="number" id="dIn" placeholder="مثال: 120" step="any" required>
+                <input type="number" id="dIn" placeholder="مثال: 120" step="any" value="120" required>
             </div>
             <div class="input-group">
                 <label>عدد المسامير (ثقوب التثبيت):</label>
-                <input type="number" id="nBolts" placeholder="مثال: 4 أو 6" required>
+                <input type="number" id="nBolts" placeholder="مثال: 6" value="6" required>
             </div>
             <div class="input-group">
                 <label>قطر المسمار أو الثقب المراد (مم):</label>
-                <input type="number" id="dHole" placeholder="مثال: 10" step="any" required>
+                <input type="number" id="dHole" placeholder="مثال: 10" step="any" value="10" required>
             </div>
-            <button onclick="calculateGasket()">احسب الأبعاد الآن</button>
+            <button onclick="calculateGasket()">احسب وتحديث الرسمة</button>
         </div>
 
-        <!-- قسم الرسم التوضيحي المباشر -->
-        <div class="visual-section">
-            <svg class="gasket-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <!-- القطر الخارجي -->
-                <circle cx="100" cy="100" r="85" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
-                <!-- القطر الداخلي -->
-                <circle cx="100" cy="100" r="50" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
-                <!-- دائرة المسامير الوهمية PCD -->
-                <circle cx="100" cy="100" r="67.5" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4 4"/>
-                
-                <!-- أمثلة لثقوب مسامير توضيحية -->
-                <circle cx="100" cy="32.5" r="7" fill="#64748b" />
-                <circle cx="100" cy="167.5" r="7" fill="#64748b" />
-                <circle cx="32.5" cy="100" r="7" fill="#64748b" />
-                <circle cx="167.5" cy="100" r="7" fill="#64748b" />
-                
-                <!-- خط قياس المسافة بين مسمارين متجاورين -->
-                <path d="M 100 32.5 L 167.5 100" stroke="#f59e0b" stroke-width="2" stroke-dasharray="2 2"/>
-                <circle cx="100" cy="32.5" r="3" fill="#f59e0b"/>
-                <circle cx="167.5" cy="100" r="3" fill="#f59e0b"/>
+        <!-- قسم الرسم التوضيحي الديناميكي -->
+        <div class="visual-section" id="visualSection">
+            <svg id="gasket-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- المجموعات التي سيتم تحديثها بالـ Javascript -->
+                <g id="gasket-body"></g>
+                <g id="pcd-circle"></g>
+                <g id="bolt-holes"></g>
+                <g id="measurement-lines"></g>
             </svg>
             <p style="font-size: 12px; color: var(--text-light); text-align: center; margin-top: 10px;">
-                الخط الأزرق المقطع (<span style="color:var(--primary)">---</span>) هو دائرة المسامير (PCD).<br>
-                الخط البرتقالي (<span style="color:var(--accent)">---</span>) هو فتحة المدور بين كل مسمارين.
+                الخط الأزرق المقطع (<span style="color:var(--primary)">---</span>) هو الـ PCD.<br>
+                الخط البرتقالي المتصل (<span style="color:var(--accent)">-</span>) هو المسافة لفتح المدور.
             </p>
         </div>
 
@@ -245,22 +229,17 @@
             <h3>النتائج الهندسية للتنفيذ يدوياً:</h3>
             
             <div class="result-item">
-                <span>قطر دائرة المسامير الافتراضي (PCD):</span>
-                <span class="result-value" id="resPCD">0 مم</span>
-            </div>
-            
-            <div class="result-item">
-                <span>1. فتحة المدور من المركز لرسم دائرة المسامير:</span>
+                <span>1. فتحة المدور من المركز لرسم الـ PCD:</span>
                 <span class="result-value" id="resRadius" style="background:#bbf7d0; color:#166534;">0 مم</span>
             </div>
             
             <div class="result-item">
-                <span>2. فتحة المدور للانتقال من مسمار لمسمار (المسافة المستقيمة):</span>
+                <span>2. فتحة المدور بين مسمارين (المسافة المستقيمة):</span>
                 <span class="result-value" id="resChord" style="background:#fef3c7; color:#92400e;">0 مم</span>
             </div>
 
             <div class="result-item">
-                <span>قطر الثقب المقترح قصّه بالمقص (مع خلوص الأمان):</span>
+                <span>قطر ثقب الجوان لقصّه بالمقص (مع خلوص الأمان):</span>
                 <span class="result-value" id="resHole">0 مم</span>
             </div>
         </div>
@@ -268,6 +247,64 @@
 </div>
 
 <script>
+    // وظيفة للرسم الديناميكي داخل الـ SVG
+    function drawGasketDynamic(dOut, dIn, nBolts, dHole, pcd, rPcd) {
+        const svg = document.getElementById('gasket-svg');
+        const gasketBodyGrp = document.getElementById('gasket-body');
+        const pcdCircleGrp = document.getElementById('pcd-circle');
+        const boltHolesGrp = document.getElementById('bolt-holes');
+        const measurementGrp = document.getElementById('measurement-lines');
+
+        // تنظيف الرسمة السابقة
+        gasketBodyGrp.innerHTML = '';
+        pcdCircleGrp.innerHTML = '';
+        boltHolesGrp.innerHTML = '';
+        measurementGrp.innerHTML = '';
+
+        // مقياس الرسم: سنجعل القطر الخارجي دائماً يحتل معظم الـ SVG (200x200)
+        // لنفترض أن الحد الأقصى للنصف القطر هو 90 ليترك مسافة
+        const viewBoxHalfSize = 100;
+        const maxVisualRadius = 90;
+        const scaleFactor = maxVisualRadius / (dOut / 2);
+
+        const vR_out = (dOut / 2) * scaleFactor;
+        const vR_in = (dIn / 2) * scaleFactor;
+        const vR_pcd = rPcd * scaleFactor;
+        const vR_hole = (dHole / 2) * scaleFactor;
+
+        // 1. رسم جسم الجوان
+        // القطر الخارجي
+        gasketBodyGrp.innerHTML += `<circle cx="100" cy="100" r="${vR_out}" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>`;
+        // القطر الداخلي (تفريغ)
+        gasketBodyGrp.innerHTML += `<circle cx="100" cy="100" r="${vR_in}" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>`;
+
+        // 2. رسم دائرة الـ PCD الوهمية
+        pcdCircleGrp.innerHTML += `<circle cx="100" cy="100" r="${vR_pcd}" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="4 4"/>`;
+
+        // 3. رسم المسامير
+        const boltPositions = [];
+        for (let i = 0; i < nBolts; i++) {
+            // حساب الزاوية لكل مسمار بالراديان (نبدأ من الأعلى: angle = -90 درجة)
+            const angleRad = (i * 2 * Math.PI / nBolts) - (Math.PI / 2);
+            const x = 100 + vR_pcd * Math.cos(angleRad);
+            const y = 100 + vR_pcd * Math.sin(angleRad);
+            boltPositions.push({x, y});
+
+            // رسم الثقب
+            boltHolesGrp.innerHTML += `<circle cx="${x}" cy="${y}" r="${vR_hole}" fill="#64748b" stroke="#1e293b" stroke-width="0.5"/>`;
+        }
+
+        // 4. رسم خط القياس البرتقالي بين أول مسمارين
+        if (nBolts >= 2) {
+            const p1 = boltPositions[0];
+            const p2 = boltPositions[1];
+            measurementGrp.innerHTML += `<path d="M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}" stroke="#f59e0b" stroke-width="2" />`;
+            // نقاط تمييز في البداية والنهاية
+            measurementGrp.innerHTML += `<circle cx="${p1.x}" cy="${p1.y}" r="2" fill="#f59e0b"/>`;
+            measurementGrp.innerHTML += `<circle cx="${p2.x}" cy="${p2.y}" r="2" fill="#f59e0b"/>`;
+        }
+    }
+
     function calculateGasket() {
         // جلب قيم المدخلات
         const dOut = parseFloat(document.getElementById('dOut').value);
@@ -276,34 +313,39 @@
         const dHole = parseFloat(document.getElementById('dHole').value);
 
         // التحقق من صحة المدخلات
-        if (isNaN(dOut) || isNaN(dIn) || isNaN(nBolts) || isNaN(dHole) || dOut <= dIn || nBolts <= 0) {
-            alert("الرجاء إدخال قيم صحيحة، وتأكد أن القطر الخارجي أكبر من الداخلي.");
+        if (isNaN(dOut) || isNaN(dIn) || isNaN(nBolts) || isNaN(dHole) || dOut <= dIn || nBolts <= 0 || dOut <= 0 || dIn <= 0) {
+            alert("الرجاء إدخال قيم صحيحة وموجبة، وتأكد أن القطر الخارجي أكبر من الداخلي.");
             return;
         }
 
-        // 1. حساب الـ PCD (يفترض هندسياً أنه في المنتصف تماماً بين القطرين)
+        // الحسابات
+        // 1. حساب الـ PCD الافتراضي (في المنتصف تماماً)
         const pcd = dIn + (dOut - dIn) / 2;
         
-        // 2. نصف قطر دائرة الـ PCD (لضبط المدور من المركز)
+        // 2. نصف قطر دائرة الـ PCD (لفتح المدور من المركز)
         const rPcd = pcd / 2;
 
-        // 3. حساب المسافة المستقيمة بين المسامير (الوتر Chord Distance) باستخدام قانون الجيب
+        // 3. حساب المسافة المستقيمة بين المسامير المتجاورة
         const chordDistance = pcd * Math.sin(Math.PI / nBolts);
 
-        // 4. قطر الثقب مع إضافة خلوص بسيط (0.5 مم) لتسهيل دخول المسمار دون تمزيق الجوان
+        // 4. خلوص الأمان لقطر الثقب
         const recommendedHole = dHole + 0.5;
 
-        // عرض النتائج في الكرت وتحديث النصوص
-        document.getElementById('resPCD').innerText = pcd.toFixed(2) + " مم";
+        // تحديث النصوص في النتائج
         document.getElementById('resRadius').innerText = rPcd.toFixed(2) + " مم";
         document.getElementById('resChord').innerText = chordDistance.toFixed(2) + " مم";
-        document.getElementById('resHole').innerText = recommendedHole.toFixed(2) + " مم (شامل الخلوص)";
+        document.getElementById('resHole').innerText = recommendedHole.toFixed(2) + " مم";
         
-        // إظهار كرت النتائج بحركة سلسة
+        // إظهار كرت النتائج
         document.getElementById('resultsCard').style.display = 'block';
+
+        // --- تحديث الرسمة التوضيحية الديناميكية ---
+        drawGasketDynamic(dOut, dIn, nBolts, dHole, pcd, rPcd);
     }
+
+    // تشغيل الحساب مرة واحدة عند تحميل الصفحة لكي تظهر رسمة ابتدائية
+    window.onload = calculateGasket;
 </script>
 
 </body>
 </html>
-
