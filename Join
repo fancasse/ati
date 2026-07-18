@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة أبعاد الجوانات الاحترافية</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .input-group input {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 211, 0.15);
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        .visual-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px dashed var(--border);
+        }
+
+        .gasket-svg {
+            width: 100%;
+            max-width: 260px;
+            height: auto;
+        }
+
+        .results-card {
+            grid-column: 1 / -1;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .results-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px solid #bfdbfe;
+            padding-bottom: 5px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 15px;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-value {
+            font-weight: bold;
+            color: #1e3a8a;
+            background: #dbeafe;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>حاسبة ورش الخراطة وتصنيع الجوانات</h1>
+        <p>احسب أبعاد الفتح الدقيق للمدور (الفرجار) لثقب مسامير الجوان يدوياً بدون خطأ</p>
+    </header>
+
+    <div class="main-content">
+        <!-- قسم الإدخال -->
+        <div class="input-section">
+            <div class="input-group">
+                <label>القطر الخارجي للجوان (مم):</label>
+                <input type="number" id="dOut" placeholder="مثال: 200" step="any" required>
+            </div>
+            <div class="input-group">
+                <label>القطر الداخلي للجوان (مم):</label>
+                <input type="number" id="dIn" placeholder="مثال: 120" step="any" required>
+            </div>
+            <div class="input-group">
+                <label>عدد المسامير (ثقوب التثبيت):</label>
+                <input type="number" id="nBolts" placeholder="مثال: 4 أو 6" required>
+            </div>
+            <div class="input-group">
+                <label>قطر المسمار أو الثقب المراد (مم):</label>
+                <input type="number" id="dHole" placeholder="مثال: 10" step="any" required>
+            </div>
+            <button onclick="calculateGasket()">احسب الأبعاد الآن</button>
+        </div>
+
+        <!-- قسم الرسم التوضيحي المباشر -->
+        <div class="visual-section">
+            <svg class="gasket-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- القطر الخارجي -->
+                <circle cx="100" cy="100" r="85" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                <!-- القطر الداخلي -->
+                <circle cx="100" cy="100" r="50" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+                <!-- دائرة المسامير الوهمية PCD -->
+                <circle cx="100" cy="100" r="67.5" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4 4"/>
+                
+                <!-- أمثلة لثقوب مسامير توضيحية -->
+                <circle cx="100" cy="32.5" r="7" fill="#64748b" />
+                <circle cx="100" cy="167.5" r="7" fill="#64748b" />
+                <circle cx="32.5" cy="100" r="7" fill="#64748b" />
+                <circle cx="167.5" cy="100" r="7" fill="#64748b" />
+                
+                <!-- خط قياس المسافة بين مسمارين متجاورين -->
+                <path d="M 100 32.5 L 167.5 100" stroke="#f59e0b" stroke-width="2" stroke-dasharray="2 2"/>
+                <circle cx="100" cy="32.5" r="3" fill="#f59e0b"/>
+                <circle cx="167.5" cy="100" r="3" fill="#f59e0b"/>
+            </svg>
+            <p style="font-size: 12px; color: var(--text-light); text-align: center; margin-top: 10px;">
+                الخط الأزرق المقطع (<span style="color:var(--primary)">---</span>) هو دائرة المسامير (PCD).<br>
+                الخط البرتقالي (<span style="color:var(--accent)">---</span>) هو فتحة المدور بين كل مسمارين.
+            </p>
+        </div>
+
+        <!-- كارت النتائج -->
+        <div class="results-card" id="resultsCard">
+            <h3>النتائج الهندسية للتنفيذ يدوياً:</h3>
+            
+            <div class="result-item">
+                <span>قطر دائرة المسامير الافتراضي (PCD):</span>
+                <span class="result-value" id="resPCD">0 مم</span>
+            </div>
+            
+            <div class="result-item">
+                <span>1. فتحة المدور من المركز لرسم دائرة المسامير:</span>
+                <span class="result-value" id="resRadius" style="background:#bbf7d0; color:#166534;">0 مم</span>
+            </div>
+            
+            <div class="result-item">
+                <span>2. فتحة المدور للانتقال من مسمار لمسمار (المسافة المستقيمة):</span>
+                <span class="result-value" id="resChord" style="background:#fef3c7; color:#92400e;">0 مم</span>
+            </div>
+
+            <div class="result-item">
+                <span>قطر الثقب المقترح قصّه بالمقص (مع خلوص الأمان):</span>
+                <span class="result-value" id="resHole">0 مم</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateGasket() {
+        // جلب قيم المدخلات
+        const dOut = parseFloat(document.getElementById('dOut').value);
+        const dIn = parseFloat(document.getElementById('dIn').value);
+        const nBolts = parseInt(document.getElementById('nBolts').value);
+        const dHole = parseFloat(document.getElementById('dHole').value);
+
+        // التحقق من صحة المدخلات
+        if (isNaN(dOut) || isNaN(dIn) || isNaN(nBolts) || isNaN(dHole) || dOut <= dIn || nBolts <= 0) {
+            alert("الرجاء إدخال قيم صحيحة، وتأكد أن القطر الخارجي أكبر من الداخلي.");
+            return;
+        }
+
+        // 1. حساب الـ PCD (يفترض هندسياً أنه في المنتصف تماماً بين القطرين)
+        const pcd = dIn + (dOut - dIn) / 2;
+        
+        // 2. نصف قطر دائرة الـ PCD (لضبط المدور من المركز)
+        const rPcd = pcd / 2;
+
+        // 3. حساب المسافة المستقيمة بين المسامير (الوتر Chord Distance) باستخدام قانون الجيب
+        const chordDistance = pcd * Math.sin(Math.PI / nBolts);
+
+        // 4. قطر الثقب مع إضافة خلوص بسيط (0.5 مم) لتسهيل دخول المسمار دون تمزيق الجوان
+        const recommendedHole = dHole + 0.5;
+
+        // عرض النتائج في الكرت وتحديث النصوص
+        document.getElementById('resPCD').innerText = pcd.toFixed(2) + " مم";
+        document.getElementById('resRadius').innerText = rPcd.toFixed(2) + " مم";
+        document.getElementById('resChord').innerText = chordDistance.toFixed(2) + " مم";
+        document.getElementById('resHole').innerText = recommendedHole.toFixed(2) + " مم (شامل الخلوص)";
+        
+        // إظهار كرت النتائج بحركة سلسة
+        document.getElementById('resultsCard').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
+
